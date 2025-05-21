@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eleven Worlds - Ванильный Minecraft сервер</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00e0e0;
+            --primary-dark: #00a8a8;
+            --primary-light: #00ffff;
+            --bg: #0a0a12;
+            --bg-light: #12121a;
+            --text: #f0f0f0;
+            --text-dim: #b0b0b0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            opacity: 0.8;
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 25s infinite ease-in-out;
+            background: var(--primary);
+        }
+        
+        .blob:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            left: -150px;
+            top: -150px;
+            animation-delay: 0s;
+        }
+        
+        .blob:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            right: 100px;
+            top: 200px;
+            animation-delay: 8s;
+            animation-duration: 30s;
+        }
+        
+        .blob:nth-child(3) {
+            width: 450px;
+            height: 450px;
+            left: 300px;
+            bottom: -100px;
+            animation-delay: 15s;
+        }
+        
+        .blob:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            right: -50px;
+            bottom: 200px;
+            animation-delay: 5s;
+            animation-duration: 35s;
+        }
+        
+        .blob:nth-child(5) {
+            width: 700px;
+            height: 700px;
+            left: 50%;
+            top: 50%;
+            animation-delay: 12s;
+            animation-duration: 40s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            20% {
+                transform: translate(50px, 80px) scale(1.1);
+            }
+            40% {
+                transform: translate(-30px, 120px) scale(0.9);
+            }
+            60% {
+                transform: translate(80px, -50px) scale(1.05);
+            }
+            80% {
+                transform: translate(-70px, 30px) scale(0.95);
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            padding-top: 25vh;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 15px rgba(0, 224, 224, 0.6));
+            transition: transform 0.5s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 224, 224, 0.3);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            font-family: 'Kanit', sans-serif;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            max-width: 600px;
+            margin-bottom: 40px;
+            color: var(--text);
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+        
+        .description br {
+            display: block;
+            content: "";
+            margin-bottom: 0.8rem;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: flex-start;
+        }
+        
+        .join-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: #111;
+            font-weight: 700;
+            font-size: 1.3rem;
+            padding: 18px 45px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(0, 224, 224, 0.6);
+            border: none;
+            cursor: pointer;
+            font-family: 'Kanit', sans-serif;
+        }
+        
+        .join-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 35px rgba(0, 224, 224, 0.9);
+            background: var(--primary-light);
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        
+        .footer a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: var(--primary);
+        }
+        
+        .footer a:hover::after {
+            width: 100%;
+        }
+        
+        /* Мобильная версия */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                padding-top: 15vh;
+                text-align: center;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .description {
+                font-size: 1rem;
+                margin: 0 auto 30px;
+                text-align: center;
+            }
+            
+            .btn-container {
+                justify-content: center;
+            }
+            
+            .join-btn {
+                font-size: 1.1rem;
+                padding: 15px 35px;
+            }
+            
+            .blob {
+                filter: blur(60px);
+            }
+            
+            .blob:nth-child(1),
+            .blob:nth-child(2),
+            .blob:nth-child(3),
+            .blob:nth-child(4),
+            .blob:nth-child(5) {
+                width: 300px;
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .description {
+                font-size: 0.95rem;
+            }
+            
+            .footer {
+                font-size: 0.7rem;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Eleven Worlds Logo" class="logo">
+            <h1 class="title">ELEVEN WORLDS</h1>
+        </div>
+        
+        <p class="description">
+            Здесь вы можете окунуться в Minecraft таким, каким его задумывали изначально разработчики: без лишних модификаций, плагинов и вмешательств в игровой процесс.<br>
+            Сервер только начал своё развитие и приглашает новых активных игроков. Сейчас лучшее время, чтобы стать частью проекта с самого начала.
+        </p>
+        
+        <div class="btn-container">
+            <a href="https://discord.gg/hgek65F9mN" class="join-btn">ЗАЙТИ</a>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <a href="http://skeleton3595.fun" target="_blank">Сайт создал - Skeleton3595</a>
+    </div>
+</body>
+</html>
