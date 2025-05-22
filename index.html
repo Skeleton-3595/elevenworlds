@@ -115,11 +115,26 @@
             }
         }
         
-        .container {
-            max-width: 1200px;
+        .main-content {
+            display: flex;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 40px;
             padding-top: 25vh;
+            gap: 50px;
+        }
+        
+        .text-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .gallery-container {
+            flex: 1;
+            position: relative;
+            max-width: 600px;
+            min-height: 400px;
+            display: none;
         }
         
         .header {
@@ -231,9 +246,109 @@
             width: 100%;
         }
         
+        /* Стили для галереи */
+        .gallery-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .gallery-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        .gallery-slide.active {
+            opacity: 1;
+        }
+        
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+        
+        .gallery-container:hover .gallery-nav {
+            opacity: 1;
+        }
+        
+        .gallery-prev, .gallery-next {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .gallery-prev:hover, .gallery-next:hover {
+            background: rgba(0, 224, 224, 0.7);
+            transform: scale(1.1);
+        }
+        
+        .gallery-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-container:hover .gallery-indicators {
+            opacity: 1;
+        }
+        
+        .gallery-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-indicator.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+        
         /* Мобильная версия */
+        @media (min-width: 992px) {
+            .gallery-container {
+                display: block;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .container {
+            .main-content {
+                flex-direction: column;
                 padding: 20px;
                 padding-top: 15vh;
                 text-align: center;
@@ -283,6 +398,10 @@
                 width: 300px;
                 height: 300px;
             }
+            
+            .gallery-container {
+                display: none;
+            }
         }
         
         @media (max-width: 480px) {
@@ -311,24 +430,128 @@
         <div class="blob"></div>
     </div>
     
-    <div class="container">
-        <div class="header">
-            <img src="logo.png" alt="Eleven Worlds Logo" class="logo">
-            <h1 class="title">ELEVEN WORLDS</h1>
+    <div class="main-content">
+        <div class="text-content">
+            <div class="header">
+                <img src="logo.png" alt="Eleven Worlds Logo" class="logo">
+                <h1 class="title">ELEVEN WORLDS</h1>
+            </div>
+            
+            <p class="description">
+                Здесь вы можете окунуться в Minecraft таким, каким его задумывали изначально разработчики: без лишних модификаций, плагинов и вмешательств в игровой процесс.<br>
+                Сервер только начал своё развитие и приглашает новых активных игроков. Сейчас лучшее время, чтобы стать частью проекта с самого начала.
+            </p>
+            
+            <div class="btn-container">
+                <a href="https://discord.gg/hgek65F9mN" class="join-btn">ЗАЙТИ</a>
+            </div>
         </div>
         
-        <p class="description">
-            Здесь вы можете окунуться в Minecraft таким, каким его задумывали изначально разработчики: без лишних модификаций, плагинов и вмешательств в игровой процесс.<br>
-            Сервер только начал своё развитие и приглашает новых активных игроков. Сейчас лучшее время, чтобы стать частью проекта с самого начала.
-        </p>
-        
-        <div class="btn-container">
-            <a href="https://discord.gg/hgek65F9mN" class="join-btn">ЗАЙТИ</a>
+        <div class="gallery-container" id="gallery">
+            <!-- Скриншоты будут добавлены через JavaScript -->
+            <div class="gallery-nav">
+                <button class="gallery-prev">←</button>
+                <button class="gallery-next">→</button>
+            </div>
+            <div class="gallery-indicators"></div>
         </div>
     </div>
     
     <div class="footer">
         <a href="http://skeleton3595.fun" target="_blank">Сайт создал - Skeleton3595</a>
     </div>
+
+    <script>
+        // Галерея скриншотов
+        const gallery = document.getElementById('gallery');
+        const indicatorsContainer = gallery.querySelector('.gallery-indicators');
+        const prevBtn = gallery.querySelector('.gallery-prev');
+        const nextBtn = gallery.querySelector('.gallery-next');
+        
+        // Создаем слайды
+        for (let i = 1; i <= 11; i++) {
+            const slide = document.createElement('div');
+            slide.className = 'gallery-slide';
+            slide.innerHTML = `<img src="${i}.png" alt="Скриншот ${i}">`;
+            gallery.insertBefore(slide, gallery.firstChild);
+            
+            // Создаем индикаторы
+            const indicator = document.createElement('div');
+            indicator.className = 'gallery-indicator';
+            indicator.dataset.index = i - 1;
+            indicatorsContainer.appendChild(indicator);
+        }
+        
+        const slides = gallery.querySelectorAll('.gallery-slide');
+        const indicators = gallery.querySelectorAll('.gallery-indicator');
+        
+        let currentSlide = 0;
+        let autoSlideInterval;
+        
+        // Показываем первый слайд
+        slides[currentSlide].classList.add('active');
+        indicators[currentSlide].classList.add('active');
+        
+        // Функция переключения слайдов
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            indicators[currentSlide].classList.remove('active');
+            
+            currentSlide = (index + slides.length) % slides.length;
+            
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
+        }
+        
+        // Автоматическое перелистывание
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                goToSlide(currentSlide + 1);
+            }, 5000);
+        }
+        
+        // Остановка автоматического перелистывания при наведении
+        gallery.addEventListener('mouseenter', () => {
+            clearInterval(autoSlideInterval);
+        });
+        
+        gallery.addEventListener('mouseleave', () => {
+            startAutoSlide();
+        });
+        
+        // Навигация
+        prevBtn.addEventListener('click', () => {
+            goToSlide(currentSlide - 1);
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            goToSlide(currentSlide + 1);
+        });
+        
+        // Навигация по индикаторам
+        indicators.forEach(indicator => {
+            indicator.addEventListener('click', () => {
+                goToSlide(parseInt(indicator.dataset.index));
+            });
+        });
+        
+        // Запускаем автоматическое перелистывание
+        startAutoSlide();
+        
+        // Для мобильных устройств
+        const joinBtn = document.querySelector('.join-btn');
+        
+        joinBtn.addEventListener('touchstart', () => {
+            joinBtn.style.transform = 'translateY(-5px)';
+            joinBtn.style.boxShadow = '0 0 35px rgba(0, 224, 224, 0.9)';
+            joinBtn.style.background = 'var(--primary-light)';
+        });
+        
+        joinBtn.addEventListener('touchend', () => {
+            joinBtn.style.transform = '';
+            joinBtn.style.boxShadow = '0 0 20px rgba(0, 224, 224, 0.6)';
+            joinBtn.style.background = 'var(--primary)';
+        });
+    </script>
 </body>
 </html>
